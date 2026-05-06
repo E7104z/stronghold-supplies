@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isContractor() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'contractor';
+    }
+
+    match /users/{uid} {
+      allow read: if request.auth.uid == uid || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /contractors/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    match /inventory/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /contacts/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /quotes/{id} {
+      allow read: if isAdmin() ||
+        (isContractor() && resource.data.contractorId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    match /orders/{id} {
+      allow read: if isAdmin() ||
+        (isContractor() && resource.data.contractorId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    match /invoices/{id} {
+      allow read: if isAdmin() ||
+        (isContractor() && resource.data.contractorId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    match /meta/{doc} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+  }
+}
