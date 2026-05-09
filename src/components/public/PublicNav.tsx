@@ -44,9 +44,15 @@ export default function PublicNav() {
         <div className="hidden md:flex items-center gap-3">
           <Link
             to="/login"
+            className="text-stronghold-black hover:text-stronghold-red text-sm font-medium transition-colors"
+          >
+            Sign In
+          </Link>
+          <Link
+            to="/signup"
             className="bg-stronghold-red text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-stronghold-darkred transition-colors"
           >
-            Account Login
+            Create Account
           </Link>
         </div>
 
@@ -80,9 +86,16 @@ export default function PublicNav() {
           <Link
             to="/login"
             onClick={() => setOpen(false)}
-            className="block mt-2 bg-stronghold-red text-white px-4 py-2.5 rounded-lg text-sm font-medium text-center hover:bg-stronghold-darkred transition-colors"
+            className="block mt-2 px-4 py-2.5 rounded-lg text-sm font-medium text-center text-stronghold-black hover:text-stronghold-red transition-colors"
           >
-            Account Login
+            Sign In
+          </Link>
+          <Link
+            to="/signup"
+            onClick={() => setOpen(false)}
+            className="block bg-stronghold-red text-white px-4 py-2.5 rounded-lg text-sm font-medium text-center hover:bg-stronghold-darkred transition-colors"
+          >
+            Create Account
           </Link>
         </div>
       )}

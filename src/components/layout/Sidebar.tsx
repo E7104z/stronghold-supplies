@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Package, FileText,
-  ShoppingCart, Receipt, TrendingUp, LogOut
+  ShoppingCart, Receipt, TrendingUp, LogOut,
+  FilePlus, MessageSquare, UserCog,
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -17,8 +18,12 @@ const adminNav = [
 
 const contractorNav = [
   { to: '/portal', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/portal/request-quote', label: 'Request Quote', icon: FilePlus },
   { to: '/portal/quotes', label: 'My Quotes', icon: FileText },
   { to: '/portal/orders', label: 'My Orders', icon: ShoppingCart },
+  { to: '/portal/invoices', label: 'Invoices', icon: Receipt },
+  { to: '/portal/support', label: 'Support', icon: MessageSquare },
+  { to: '/portal/account', label: 'Account', icon: UserCog },
 ]
 
 export default function Sidebar() {
@@ -33,7 +38,7 @@ export default function Sidebar() {
           <img src="/logo.png" alt="Strong Hold Supplies" className="h-[120px] w-auto" />
         </div>
         <p className="text-stronghold-gray text-xs mt-2 uppercase tracking-widest">
-          {user?.role === 'admin' ? 'Admin Portal' : 'Contractor Portal'}
+          {user?.role === 'admin' ? 'Admin Portal' : 'Customer Portal'}
         </p>
       </div>
 

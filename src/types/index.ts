@@ -7,6 +7,37 @@ export interface AppUser {
   role: UserRole
   companyName: string
   phone: string
+  address?: string
+  city?: string
+  state?: string
+  zip?: string
+  createdAt: Date
+}
+
+export interface QuoteRequest {
+  id: string
+  contractorId: string
+  contractorName: string
+  companyName: string
+  email: string
+  phone: string
+  productInterest: string
+  estimatedSqFt: number
+  projectAddress: string
+  desiredDelivery: string
+  notes: string
+  status: 'new' | 'reviewing' | 'quoted' | 'closed'
+  createdAt: Date
+}
+
+export interface SupportMessage {
+  id: string
+  contractorId: string
+  contractorName: string
+  email: string
+  subject: string
+  message: string
+  status: 'open' | 'replied' | 'closed'
   createdAt: Date
 }
 

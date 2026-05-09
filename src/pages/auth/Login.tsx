@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import toast from 'react-hot-toast'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, resetPassword } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,12 +22,27 @@ export default function Login() {
     }
   }
 
+  const handleForgot = async () => {
+    if (!email) {
+      toast.error('Enter your email above first')
+      return
+    }
+    try {
+      await resetPassword(email)
+      toast.success('Password reset email sent')
+    } catch {
+      toast.error('Could not send reset email')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <img src="/logo.png" alt="Strong Hold Supplies" className="h-60 w-auto mx-auto mb-4" />
-          <h1 className="text-stronghold-black text-2xl font-bold">Strong Hold Supplies</h1>
+          <Link to="/">
+            <img src="/logo.png" alt="Strong Hold Supplies" className="h-60 w-auto mx-auto mb-4" />
+          </Link>
+          <h1 className="text-stronghold-black text-2xl font-bold">Welcome back</h1>
           <p className="text-stronghold-gray text-sm mt-1">Sign in to your account</p>
         </div>
 
@@ -45,7 +61,10 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stronghold-black mb-1">Password</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-stronghold-black">Password</label>
+                <button type="button" onClick={handleForgot} className="text-xs text-stronghold-red hover:underline">Forgot?</button>
+              </div>
               <input
                 type="password"
                 required
@@ -65,10 +84,15 @@ export default function Login() {
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
+
+          <p className="text-center text-stronghold-gray text-sm mt-6">
+            New customer?{' '}
+            <Link to="/signup" className="text-stronghold-red font-medium hover:underline">Create an account</Link>
+          </p>
         </form>
 
         <p className="text-center text-stronghold-gray text-xs mt-6">
-          Strong Hold Supplies — Internal Portal
+          Strong Hold Supplies — Wholesale Pricing
         </p>
       </div>
     </div>

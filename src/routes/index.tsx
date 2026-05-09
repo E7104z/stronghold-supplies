@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Login from '../pages/auth/Login'
+import Signup from '../pages/auth/Signup'
 import Layout from '../components/layout/Layout'
 import PublicLayout from '../components/public/PublicLayout'
 
@@ -15,6 +16,10 @@ import MarginTracker from '../pages/admin/MarginTracker'
 import ContractorDashboard from '../pages/contractor/ContractorDashboard'
 import ContractorQuotes from '../pages/contractor/ContractorQuotes'
 import ContractorOrders from '../pages/contractor/ContractorOrders'
+import ContractorInvoices from '../pages/contractor/ContractorInvoices'
+import ContractorAccount from '../pages/contractor/ContractorAccount'
+import ContractorSupport from '../pages/contractor/ContractorSupport'
+import ContractorRequestQuote from '../pages/contractor/ContractorRequestQuote'
 
 import Home from '../pages/public/Home'
 import Products from '../pages/public/Products'
@@ -65,6 +70,9 @@ export default function AppRoutes() {
         <Route path="/login" element={
           user ? <Navigate to={user.role === 'admin' ? '/admin' : '/portal'} replace /> : <Login />
         } />
+        <Route path="/signup" element={
+          user ? <Navigate to={user.role === 'admin' ? '/admin' : '/portal'} replace /> : <Signup />
+        } />
 
         <Route path="/admin" element={<AdminRoute><Layout /></AdminRoute>}>
           <Route index element={<Dashboard />} />
@@ -78,8 +86,12 @@ export default function AppRoutes() {
 
         <Route path="/portal" element={<ContractorRoute><Layout /></ContractorRoute>}>
           <Route index element={<ContractorDashboard />} />
+          <Route path="request-quote" element={<ContractorRequestQuote />} />
           <Route path="quotes" element={<ContractorQuotes />} />
           <Route path="orders" element={<ContractorOrders />} />
+          <Route path="invoices" element={<ContractorInvoices />} />
+          <Route path="support" element={<ContractorSupport />} />
+          <Route path="account" element={<ContractorAccount />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
