@@ -38,6 +38,8 @@ export interface SupportMessage {
   subject: string
   message: string
   status: 'open' | 'replied' | 'closed'
+  adminReply?: string
+  repliedAt?: Date
   createdAt: Date
 }
 

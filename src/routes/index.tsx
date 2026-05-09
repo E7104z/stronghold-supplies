@@ -12,6 +12,8 @@ import Quotes from '../pages/admin/Quotes'
 import Orders from '../pages/admin/Orders'
 import Invoices from '../pages/admin/Invoices'
 import MarginTracker from '../pages/admin/MarginTracker'
+import QuoteRequests from '../pages/admin/QuoteRequests'
+import SupportInbox from '../pages/admin/SupportInbox'
 
 import ContractorDashboard from '../pages/contractor/ContractorDashboard'
 import ContractorQuotes from '../pages/contractor/ContractorQuotes'
@@ -78,9 +80,11 @@ export default function AppRoutes() {
           <Route index element={<Dashboard />} />
           <Route path="contractors" element={<Contractors />} />
           <Route path="inventory" element={<Inventory />} />
+          <Route path="quote-requests" element={<QuoteRequests />} />
           <Route path="quotes" element={<Quotes />} />
           <Route path="orders" element={<Orders />} />
           <Route path="invoices" element={<Invoices />} />
+          <Route path="support" element={<SupportInbox />} />
           <Route path="margins" element={<MarginTracker />} />
         </Route>
 

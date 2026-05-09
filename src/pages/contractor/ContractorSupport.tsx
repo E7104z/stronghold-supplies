@@ -5,7 +5,7 @@ import { useSupport } from '../../hooks/useSupport'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import Badge from '../../components/ui/Badge'
-import { MessageSquare, Mail, Phone } from 'lucide-react'
+import { MessageSquare, Mail, Phone, CheckCircle2 } from 'lucide-react'
 import { format } from 'date-fns'
 
 export default function ContractorSupport() {
@@ -111,10 +111,24 @@ export default function ContractorSupport() {
                     <div className="font-medium text-stronghold-black">{m.subject}</div>
                     <Badge label={m.status} variant={m.status === 'open' ? 'warning' : m.status === 'replied' ? 'success' : 'default'} />
                   </div>
-                  <p className="text-sm text-stronghold-gray whitespace-pre-wrap">{m.message}</p>
-                  <div className="text-xs text-stronghold-gray mt-2">
+                  <p className="text-sm text-stronghold-gray whitespace-pre-wrap mb-2">{m.message}</p>
+                  <div className="text-xs text-stronghold-gray">
                     {m.createdAt ? format(new Date(m.createdAt as unknown as string), 'MMM d, yyyy · h:mm a') : '—'}
                   </div>
+                  {m.adminReply && (
+                    <div className="mt-4 bg-green-50 border border-green-100 rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CheckCircle2 size={14} className="text-green-600" />
+                        <span className="text-xs font-semibold text-green-700 uppercase tracking-wider">Reply from Strong Hold</span>
+                        {m.repliedAt && (
+                          <span className="text-xs text-green-600/70 ml-auto">
+                            {format(new Date(m.repliedAt as unknown as string), 'MMM d · h:mm a')}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-stronghold-black whitespace-pre-wrap">{m.adminReply}</p>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

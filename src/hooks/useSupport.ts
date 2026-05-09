@@ -51,5 +51,18 @@ export function useSupport() {
     }
   }
 
-  return { messages, loading, sendMessage, updateStatus }
+  const reply = async (id: string, adminReply: string) => {
+    try {
+      await updateDoc(doc(db, 'supportMessages', id), {
+        adminReply,
+        repliedAt: serverTimestamp(),
+        status: 'replied',
+      })
+      toast.success('Reply sent')
+    } catch {
+      toast.error('Failed to send reply')
+    }
+  }
+
+  return { messages, loading, sendMessage, updateStatus, reply }
 }

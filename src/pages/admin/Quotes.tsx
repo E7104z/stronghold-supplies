@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus, Send, RefreshCw, Download } from 'lucide-react'
 import { useQuotes } from '../../hooks/useQuotes'
 import { useContractors } from '../../hooks/useContractors'
 import { useInventory } from '../../hooks/useInventory'
 import type { Quote, LineItem } from '../../types'
+import type { QuoteRequest } from '../../types'
 import Button from '../../components/ui/Button'
 import Badge from '../../components/ui/Badge'
 import Modal from '../../components/ui/Modal'
@@ -11,6 +12,7 @@ import Card from '../../components/ui/Card'
 import { format } from 'date-fns'
 import { pdf } from '@react-pdf/renderer'
 import QuotePDF from '../../components/pdf/QuotePDF'
+import { useLocation } from 'react-router-dom'
 
 function statusVariant(s: Quote['status']): 'default' | 'info' | 'success' | 'danger' | 'warning' | 'gold' {
   const map: Record<Quote['status'], 'default' | 'info' | 'success' | 'danger' | 'warning' | 'gold'> = {
@@ -25,10 +27,28 @@ export default function Quotes() {
   const { quotes, loading, addQuote, updateQuote, convertToOrder } = useQuotes()
   const { contractors } = useContractors()
   const { inventory } = useInventory()
+  const location = useLocation()
   const [modal, setModal] = useState<'add' | 'view' | null>(null)
   const [contractorId, setContractorId] = useState('')
   const [lineItems, setLineItems] = useState<LineItem[]>([{ ...emptyLine }])
   const [notes, setNotes] = useState('')
+
+  // Pre-fill from Quote Request navigation
+  useEffect(() => {
+    const prefill = location.state?.prefill as QuoteRequest | undefined
+    if (prefill && contractors.length > 0) {
+      const match = contractors.find(c => c.id === prefill.contractorId)
+      if (match) setContractorId(match.id)
+      setNotes([
+        prefill.productInterest ? `Product interest: ${prefill.productInterest}` : '',
+        prefill.estimatedSqFt ? `Est. sq ft: ${prefill.estimatedSqFt}` : '',
+        prefill.projectAddress ? `Project address: ${prefill.projectAddress}` : '',
+        prefill.desiredDelivery ? `Desired delivery: ${prefill.desiredDelivery}` : '',
+        prefill.notes ? `Customer notes: ${prefill.notes}` : '',
+      ].filter(Boolean).join('\n'))
+      setModal('add')
+    }
+  }, [location.state, contractors])
 
   const totals = lineItems.reduce((acc, li) => ({
     subtotal: acc.subtotal + li.total,

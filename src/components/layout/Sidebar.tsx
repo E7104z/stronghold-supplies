@@ -2,19 +2,11 @@ import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Package, FileText,
   ShoppingCart, Receipt, TrendingUp, LogOut,
-  FilePlus, MessageSquare, UserCog,
+  FilePlus, MessageSquare, UserCog, Inbox,
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-
-const adminNav = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/admin/contractors', label: 'Contractors', icon: Users },
-  { to: '/admin/inventory', label: 'Inventory', icon: Package },
-  { to: '/admin/quotes', label: 'Quotes', icon: FileText },
-  { to: '/admin/orders', label: 'Orders', icon: ShoppingCart },
-  { to: '/admin/invoices', label: 'Invoices', icon: Receipt },
-  { to: '/admin/margins', label: 'Margins', icon: TrendingUp },
-]
+import { useQuoteRequests } from '../../hooks/useQuoteRequests'
+import { useSupport } from '../../hooks/useSupport'
 
 const contractorNav = [
   { to: '/portal', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -28,7 +20,27 @@ const contractorNav = [
 
 export default function Sidebar() {
   const { user, logout } = useAuth()
-  const nav = user?.role === 'admin' ? adminNav : contractorNav
+  const { requests } = useQuoteRequests()
+  const { messages } = useSupport()
+
+  const newRequests = user?.role === 'admin' ? requests.filter(r => r.status === 'new').length : 0
+  const openMessages = user?.role === 'admin' ? messages.filter(m => m.status === 'open').length : 0
+
+  const adminNav = [
+    { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true, badge: 0 },
+    { to: '/admin/contractors', label: 'Contractors', icon: Users, badge: 0 },
+    { to: '/admin/inventory', label: 'Inventory', icon: Package, badge: 0 },
+    { to: '/admin/quote-requests', label: 'Quote Requests', icon: Inbox, badge: newRequests },
+    { to: '/admin/quotes', label: 'Quotes', icon: FileText, badge: 0 },
+    { to: '/admin/orders', label: 'Orders', icon: ShoppingCart, badge: 0 },
+    { to: '/admin/invoices', label: 'Invoices', icon: Receipt, badge: 0 },
+    { to: '/admin/support', label: 'Support Inbox', icon: MessageSquare, badge: openMessages },
+    { to: '/admin/margins', label: 'Margins', icon: TrendingUp, badge: 0 },
+  ]
+
+  const nav = user?.role === 'admin'
+    ? adminNav
+    : contractorNav.map(n => ({ ...n, badge: 0 }))
 
   return (
     <aside className="w-64 bg-stronghold-black flex flex-col h-screen fixed left-0 top-0 z-30">
@@ -44,7 +56,7 @@ export default function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {nav.map(({ to, label, icon: Icon, end }) => (
+        {nav.map(({ to, label, icon: Icon, end, badge }) => (
           <NavLink
             key={to}
             to={to}
@@ -58,7 +70,12 @@ export default function Sidebar() {
             }
           >
             <Icon size={18} />
-            {label}
+            <span className="flex-1">{label}</span>
+            {badge > 0 && (
+              <span className="bg-stronghold-red text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                {badge}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
