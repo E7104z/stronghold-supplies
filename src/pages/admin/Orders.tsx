@@ -4,6 +4,7 @@ import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 
 const statusOptions: Order['status'][] = ['pending', 'confirmed', 'picked_up', 'delivered', 'complete']
 
@@ -62,7 +63,7 @@ export default function Orders() {
                   <td className="px-6 py-4 text-sm text-stronghold-gray">${o.totalRevenue.toFixed(2)}</td>
                   <td className="px-6 py-4 text-sm font-medium text-green-600">${o.totalMargin.toFixed(2)}</td>
                   <td className="px-6 py-4 text-sm text-stronghold-gray">
-                    {o.createdAt ? format(new Date(o.createdAt as unknown as string), 'MMM d, yyyy') : '—'}
+                    {toDate(o.createdAt) ? format(toDate(o.createdAt)!, 'MMM d, yyyy') : '—'}
                   </td>
                   <td className="px-6 py-4">
                     {o.status !== 'complete' && (

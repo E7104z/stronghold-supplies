@@ -6,6 +6,7 @@ import Badge from '../../components/ui/Badge'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 
 type Filter = 'open' | 'replied' | 'closed' | 'all'
 
@@ -117,7 +118,7 @@ export default function SupportInbox() {
                     <div className="text-xs text-stronghold-gray/70 truncate">{msg.message}</div>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-[10px] text-stronghold-gray/60">
-                        {msg.createdAt ? format(new Date(msg.createdAt as unknown as string), 'MMM d, h:mm a') : '—'}
+                        {toDate(msg.createdAt) ? format(toDate(msg.createdAt)!, 'MMM d, h:mm a') : '—'}
                       </span>
                       <ChevronRight size={12} className="text-stronghold-gray/40" />
                     </div>
@@ -145,7 +146,7 @@ export default function SupportInbox() {
                   <div className="flex items-center gap-2 mb-1">
                     <Badge label={selected.status} variant={statusVariant(selected.status)} />
                     <span className="text-xs text-stronghold-gray">
-                      {selected.createdAt ? format(new Date(selected.createdAt as unknown as string), 'MMMM d, yyyy h:mm a') : '—'}
+                      {toDate(selected.createdAt) ? format(toDate(selected.createdAt)!, 'MMMM d, yyyy h:mm a') : '—'}
                     </span>
                   </div>
                   <h2 className="text-xl font-bold text-stronghold-black">{selected.subject}</h2>
@@ -183,9 +184,9 @@ export default function SupportInbox() {
                   <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-sm text-stronghold-black whitespace-pre-wrap leading-relaxed">
                     {selected.adminReply}
                   </div>
-                  {selected.repliedAt && (
+                  {toDate(selected.repliedAt) && (
                     <div className="text-xs text-stronghold-gray mt-1 pl-1">
-                      Sent {format(new Date(selected.repliedAt as unknown as string), 'MMM d, yyyy h:mm a')}
+                      Sent {format(toDate(selected.repliedAt)!, 'MMM d, yyyy h:mm a')}
                     </div>
                   )}
                 </div>

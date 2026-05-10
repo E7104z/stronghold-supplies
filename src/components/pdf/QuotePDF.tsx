@@ -1,5 +1,6 @@
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer'
 import type { Quote } from '../../types'
+import { toDate } from '../../lib/dateUtils'
 
 const styles = StyleSheet.create({
   page: { padding: 48, fontFamily: 'Helvetica', backgroundColor: '#FFFFFF' },
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
 interface Props { quote: Quote }
 
 export default function QuotePDF({ quote }: Props) {
-  const date = quote.createdAt ? new Date(quote.createdAt as unknown as string).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''
+  const date = toDate(quote.createdAt)?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) ?? ''
 
   return (
     <Document>

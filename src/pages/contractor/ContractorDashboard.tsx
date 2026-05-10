@@ -15,6 +15,7 @@ import {
   MessageSquare, BookOpen, Truck,
 } from 'lucide-react'
 import { format, isAfter, subDays } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 import type { Order } from '../../types'
 
 const statusLabel: Record<Order['status'], string> = {
@@ -47,11 +48,11 @@ export default function ContractorDashboard() {
 
   const stats = useMemo(() => {
     const thirtyDaysAgo = subDays(new Date(), 30)
-    const recentOrders = orders.filter(o => o.createdAt && isAfter(new Date(o.createdAt as unknown as string), thirtyDaysAgo))
+    const recentOrders = orders.filter(o => { const d = toDate(o.createdAt); return d && isAfter(d, thirtyDaysAgo) })
     const lifetimeSpend = orders.reduce((s, o) => s + (o.totalRevenue ?? 0), 0)
     const ytdSpend = orders.filter(o => {
       if (!o.createdAt) return false
-      return new Date(o.createdAt as unknown as string).getFullYear() === new Date().getFullYear()
+      return (toDate(o.createdAt)?.getFullYear() ?? -1) === new Date().getFullYear()
     }).reduce((s, o) => s + (o.totalRevenue ?? 0), 0)
     return {
       activeQuotes: quotes.filter(q => q.status === 'sent' || q.status === 'draft').length,
@@ -76,28 +77,28 @@ export default function ContractorDashboard() {
       id: 'q-' + q.id, type: 'quote',
       label: `Quote ${q.status === 'sent' ? 'received' : q.status}`,
       sub: `$${q.subtotal?.toFixed(2) ?? '0.00'}`,
-      date: q.createdAt ? new Date(q.createdAt as unknown as string) : new Date(0),
+      date: toDate(q.createdAt) ?? new Date(0),
       href: '/portal/quotes',
     }))
     orders.slice(0, 5).forEach(o => items.push({
       id: 'o-' + o.id, type: 'order',
       label: `Order ${statusLabel[o.status]}`,
       sub: `${o.totalSqFt?.toLocaleString()} sq ft · $${o.totalRevenue?.toFixed(2) ?? '0.00'}`,
-      date: o.createdAt ? new Date(o.createdAt as unknown as string) : new Date(0),
+      date: toDate(o.createdAt) ?? new Date(0),
       href: '/portal/orders',
     }))
     invoices.slice(0, 5).forEach(i => items.push({
       id: 'i-' + i.id, type: 'invoice',
       label: `Invoice ${i.invoiceNumber} ${i.status}`,
       sub: `$${i.total?.toFixed(2) ?? '0.00'}`,
-      date: i.createdAt ? new Date(i.createdAt as unknown as string) : new Date(0),
+      date: toDate(i.createdAt) ?? new Date(0),
       href: '/portal/invoices',
     }))
     requests.slice(0, 5).forEach(r => items.push({
       id: 'r-' + r.id, type: 'request',
       label: `Quote request: ${r.productInterest}`,
       sub: `${r.estimatedSqFt} sq ft · ${r.status}`,
-      date: r.createdAt ? new Date(r.createdAt as unknown as string) : new Date(0),
+      date: toDate(r.createdAt) ?? new Date(0),
       href: '/portal/request-quote',
     }))
     return items.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 8)
@@ -209,7 +210,7 @@ export default function ContractorDashboard() {
                     <div key={o.id} className="border border-gray-100 rounded-lg p-4">
                       <div className="flex items-start justify-between mb-3 gap-3">
                         <div>
-                          <div className="text-xs text-stronghold-gray uppercase tracking-wider">Order · {o.createdAt ? format(new Date(o.createdAt as unknown as string), 'MMM d') : '—'}</div>
+                          <div className="text-xs text-stronghold-gray uppercase tracking-wider">Order · {toDate(o.createdAt) ? format(toDate(o.createdAt)!, 'MMM d') : '—'}</div>
                           <div className="font-semibold text-stronghold-black">${o.totalRevenue?.toFixed(2) ?? '0.00'} · {o.totalSqFt?.toLocaleString() ?? 0} sq ft</div>
                         </div>
                         <Badge label={statusLabel[o.status]} variant={statusVariantOrder(o.status)} />
@@ -263,7 +264,7 @@ export default function ContractorDashboard() {
                       <div className="text-xs text-stronghold-gray truncate">{q.notes || 'No notes'}</div>
                     </div>
                     <div className="text-xs text-stronghold-gray shrink-0">
-                      {q.createdAt ? format(new Date(q.createdAt as unknown as string), 'MMM d') : '—'}
+                      {toDate(q.createdAt) ? format(toDate(q.createdAt)!, 'MMM d') : '—'}
                     </div>
                   </li>
                 ))}

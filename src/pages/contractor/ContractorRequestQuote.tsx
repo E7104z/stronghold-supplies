@@ -7,6 +7,7 @@ import Button from '../../components/ui/Button'
 import Badge from '../../components/ui/Badge'
 import { FilePlus, Package } from 'lucide-react'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 import type { QuoteRequest } from '../../types'
 
 function statusVariant(s: QuoteRequest['status']): 'default' | 'success' | 'warning' | 'info' {
@@ -142,7 +143,7 @@ export default function ContractorRequestQuote() {
                   </div>
                   {r.notes && <p className="text-sm text-stronghold-gray mt-2 whitespace-pre-wrap">{r.notes}</p>}
                   <div className="text-xs text-stronghold-gray mt-2">
-                    {r.createdAt ? format(new Date(r.createdAt as unknown as string), 'MMM d, yyyy · h:mm a') : '—'}
+                    {toDate(r.createdAt) ? format(toDate(r.createdAt)!, 'MMM d, yyyy · h:mm a') : '—'}
                   </div>
                 </li>
               ))}

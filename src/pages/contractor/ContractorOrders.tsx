@@ -3,6 +3,7 @@ import type { Order } from '../../types'
 import Badge from '../../components/ui/Badge'
 import Card from '../../components/ui/Card'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 
 const statusLabel: Record<Order['status'], string> = {
   pending: 'Pending', confirmed: 'Confirmed', picked_up: 'Picked Up', delivered: 'Delivered', complete: 'Complete'
@@ -48,7 +49,7 @@ export default function ContractorOrders() {
                   <td className="px-6 py-4 text-sm text-stronghold-gray">{o.totalSqFt.toLocaleString()}</td>
                   <td className="px-6 py-4 text-sm font-medium text-stronghold-black">${o.totalRevenue.toFixed(2)}</td>
                   <td className="px-6 py-4 text-sm text-stronghold-gray">
-                    {o.createdAt ? format(new Date(o.createdAt as unknown as string), 'MMM d, yyyy') : '—'}
+                    {toDate(o.createdAt) ? format(toDate(o.createdAt)!, 'MMM d, yyyy') : '—'}
                   </td>
                   <td className="px-6 py-4 text-sm text-stronghold-gray max-w-xs truncate">{o.notes || '—'}</td>
                 </tr>

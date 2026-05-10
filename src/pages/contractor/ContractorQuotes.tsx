@@ -4,6 +4,7 @@ import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 import { Download } from 'lucide-react'
 import { pdf } from '@react-pdf/renderer'
 import QuotePDF from '../../components/pdf/QuotePDF'
@@ -57,7 +58,7 @@ export default function ContractorQuotes() {
                   <td className="px-6 py-4"><Badge label={q.status} variant={statusVariant(q.status)} /></td>
                   <td className="px-6 py-4 text-sm font-medium text-stronghold-black">${q.subtotal.toFixed(2)}</td>
                   <td className="px-6 py-4 text-sm text-stronghold-gray">
-                    {q.createdAt ? format(new Date(q.createdAt as unknown as string), 'MMM d, yyyy') : '—'}
+                    {toDate(q.createdAt) ? format(toDate(q.createdAt)!, 'MMM d, yyyy') : '—'}
                   </td>
                   <td className="px-6 py-4 text-sm text-stronghold-gray max-w-xs truncate">{q.notes || '—'}</td>
                   <td className="px-6 py-4">

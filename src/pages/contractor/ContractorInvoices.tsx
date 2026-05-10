@@ -4,6 +4,7 @@ import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 import { Download, AlertCircle } from 'lucide-react'
 import { pdf } from '@react-pdf/renderer'
 import InvoicePDF from '../../components/pdf/InvoicePDF'
@@ -72,7 +73,7 @@ export default function ContractorInvoices() {
                     {inv.dueDate ? format(new Date(inv.dueDate as unknown as string), 'MMM d, yyyy') : '—'}
                   </td>
                   <td className="px-6 py-4 text-sm text-stronghold-gray">
-                    {inv.createdAt ? format(new Date(inv.createdAt as unknown as string), 'MMM d, yyyy') : '—'}
+                    {toDate(inv.createdAt) ? format(toDate(inv.createdAt)!, 'MMM d, yyyy') : '—'}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <Button variant="ghost" size="sm" onClick={() => handleDownload(inv)}>

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { DollarSign, TrendingUp, FileText, ShoppingCart, Receipt } from 'lucide-react'
 import { startOfMonth } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 import StatCard from '../../components/ui/StatCard'
 import { useInvoices } from '../../hooks/useInvoices'
 import { useOrders } from '../../hooks/useOrders'
@@ -19,11 +20,11 @@ export default function Dashboard() {
 
   const stats = useMemo(() => {
     const paidThisMonth = invoices
-      .filter(inv => inv.status === 'paid' && inv.paidAt && new Date(inv.paidAt) >= monthStart)
+      .filter(inv => inv.status === 'paid' && inv.paidAt && (toDate(inv.paidAt) ?? new Date(0)) >= monthStart)
       .reduce((s, inv) => s + inv.total, 0)
 
     const marginThisMonth = orders
-      .filter(o => o.status === 'complete' && o.createdAt && new Date(o.createdAt) >= monthStart)
+      .filter(o => o.status === 'complete' && o.createdAt && (toDate(o.createdAt) ?? new Date(0)) >= monthStart)
       .reduce((s, o) => s + o.totalMargin, 0)
 
     const openQuotes = quotes.filter(q => q.status === 'sent').length

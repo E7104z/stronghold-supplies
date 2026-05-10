@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useOrders } from '../../hooks/useOrders'
 import Card from '../../components/ui/Card'
 import { format, startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 
 function fmt(n: number) {
   return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -24,9 +25,9 @@ export default function MarginTracker() {
 
   const now = new Date()
   const periods = [
-    { label: 'This Month', items: completed.filter(o => new Date(o.createdAt as unknown as string) >= startOfMonth(now)) },
-    { label: 'This Quarter', items: completed.filter(o => new Date(o.createdAt as unknown as string) >= startOfQuarter(now)) },
-    { label: 'This Year', items: completed.filter(o => new Date(o.createdAt as unknown as string) >= startOfYear(now)) },
+    { label: 'This Month', items: completed.filter(o => (toDate(o.createdAt) ?? new Date(0)) >= startOfMonth(now)) },
+    { label: 'This Quarter', items: completed.filter(o => (toDate(o.createdAt) ?? new Date(0)) >= startOfQuarter(now)) },
+    { label: 'This Year', items: completed.filter(o => (toDate(o.createdAt) ?? new Date(0)) >= startOfYear(now)) },
     { label: 'All Time', items: completed },
   ]
 
@@ -117,7 +118,7 @@ export default function MarginTracker() {
                   <tr key={o.id} className="hover:bg-stronghold-lightgray/50">
                     <td className="px-6 py-4 text-sm font-medium text-stronghold-black">{o.contractorName}</td>
                     <td className="px-6 py-4 text-sm text-stronghold-gray">
-                      {o.createdAt ? format(new Date(o.createdAt as unknown as string), 'MMM d, yyyy') : '—'}
+                      {toDate(o.createdAt) ? format(toDate(o.createdAt)!, 'MMM d, yyyy') : '—'}
                     </td>
                     <td className="px-6 py-4 text-sm text-stronghold-gray">{o.totalSqFt.toLocaleString()}</td>
                     <td className="px-6 py-4 text-sm text-stronghold-gray">{fmt(o.totalRevenue)}</td>

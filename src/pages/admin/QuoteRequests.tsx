@@ -10,6 +10,7 @@ import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import { format } from 'date-fns'
+import { toDate } from '../../lib/dateUtils'
 
 type Filter = 'all' | QuoteRequest['status']
 
@@ -125,7 +126,7 @@ export default function QuoteRequests() {
                     <td className="px-6 py-4 text-sm text-stronghold-gray">{req.desiredDelivery || '—'}</td>
                     <td className="px-6 py-4"><Badge label={req.status} variant={statusVariant(req.status)} /></td>
                     <td className="px-6 py-4 text-sm text-stronghold-gray">
-                      {req.createdAt ? format(new Date(req.createdAt as unknown as string), 'MMM d, yyyy') : '—'}
+                      {toDate(req.createdAt) ? format(toDate(req.createdAt)!, 'MMM d, yyyy') : '—'}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <ChevronRight size={16} className="text-stronghold-gray inline" />
@@ -207,7 +208,7 @@ export default function QuoteRequests() {
               )}
               <div className="flex items-center gap-2 text-xs text-stronghold-gray">
                 <Building2 size={12} />
-                Received {selected.createdAt ? format(new Date(selected.createdAt as unknown as string), 'MMM d, yyyy h:mm a') : '—'}
+                Received {toDate(selected.createdAt) ? format(toDate(selected.createdAt)!, 'MMM d, yyyy h:mm a') : '—'}
               </div>
             </div>
 
